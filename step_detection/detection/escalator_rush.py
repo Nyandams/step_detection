@@ -49,16 +49,13 @@ class EscalatorRush(BaseEstimator):
                 indexes_to_keep.append(i)
 
                 end = step[1]
-        print(indexes_to_keep)
         return [steps[i] for i in range(len(steps)) if i in indexes_to_keep]
 
     def predict(self) -> List[Tuple[int, int, Any]]:
         """
         :return: list of "stair" steps found [(start, end, value)...]
         """
-
-        good_inds = [x for x in self.inds if self.score[x] <= self.max_dist]
-        last_absorbed_index = 0  # TODO: use this to optimize even more
+        good_inds = [self.inds[i] for i in range(len(self.inds)) if self.score[i] <= self.max_dist]
 
         potential_steps = []
         for index in good_inds:
@@ -69,6 +66,6 @@ class EscalatorRush(BaseEstimator):
                 """good_inds[-1] + self.min_step_size - 1 : to remove useless processing"""
                 end += 1
 
-            potential_steps.append((start, end-1, np.median(self.signal[start:end-1])))
+            potential_steps.append((start, end-1, np.mean(self.signal[start:end-1])))
 
         return self.__remove_redundant(potential_steps)
