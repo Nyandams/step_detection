@@ -1,1 +1,6 @@
 __pycache__/
+.idea
+main.py
+build
+dist
+step_detection_nyandams.egg-info
