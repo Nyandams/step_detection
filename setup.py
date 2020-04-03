@@ -6,6 +6,8 @@ with open("README.md", "r") as fh:
 setuptools.setup(
     name="escalator-nyandams",
     version="0.0.1",
+    use_scm_version=True,
+    setup_requires=['setuptools_scm'],
     author="Damien Lecha",
     author_email="lecha.damien@gmail.com",
     description="A small package to detect stagnation in the values of a signal, sort of horizontal steps",
