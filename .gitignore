@@ -3,4 +3,4 @@ __pycache__/
 main.py
 build
 dist
-step_detection_nyandams.egg-info
+*.egg-info
