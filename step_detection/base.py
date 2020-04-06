@@ -1,5 +1,5 @@
 import abc
-
+from typing import List, Tuple, Any
 
 class BaseCost(metaclass=abc.ABCMeta):
     @classmethod

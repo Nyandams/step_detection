@@ -13,7 +13,7 @@ class DistanceMeanCost(BaseCost):
 
     def error(self, start: int, end: int) -> float:
         """Return the cost of a segment based on the distance furthest element from the median"""
-        sub = self.signal[start:end+1]
+        sub = self.signal[start:end]
         mean = np.mean(sub)
         dist_max = max(sub) - mean
         dist_min = mean - min(sub)
