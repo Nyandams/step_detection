@@ -45,10 +45,11 @@ class BaseEstimator(metaclass=abc.ABCMeta):
         raise NotImplementedError
 
 
-def group_steps(steps: List[Tuple[int, int, Any]], signal, gap: int = 3, dist: int = 2):
+def group_steps(steps: List[Tuple[int, int, Any]], signal: List[float], gap: int = 3, dist: int = 2):
     """
     Regroup 2 steps together
-    :param steps:
+    :param steps: steps that results from any algorithm
+    :param signal: original time signal
     :param gap: distance in 'time' between 2 steps (maximum index difference between 2 steps)
     :param dist: distance allowed between 2 values of steps
     :return: a new list of steps  List[Tuple[int, int, Any]]
@@ -57,17 +58,19 @@ def group_steps(steps: List[Tuple[int, int, Any]], signal, gap: int = 3, dist: i
     grouped_step: List[Tuple[int, int, Any]] = []
     precedent = None
     while i < len(steps):
-        print(precedent)
-        if not precedent:
-            precedent = steps[i]
-        elif not precedent and i == len(steps)-1:
-            print("yep")
+        if not precedent and i == (len(steps) - 1):
             grouped_step.append(steps[i])
+        elif not precedent:
+            precedent = steps[i]
         elif steps[i][0] - precedent[1] < gap and abs(steps[i][2] - precedent[2]) < dist:
             precedent = (precedent[0], steps[i][1], np.mean(signal[precedent[0]:steps[i][1]]))
+        elif i == len(steps) - 1:
+            grouped_step.append(precedent)
+            grouped_step.append(steps[i])
         else:
             grouped_step.append(precedent)
-            precedent = steps[1]
+            precedent = steps[i]
+
         i += 1
 
     return grouped_step
