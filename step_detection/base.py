@@ -62,6 +62,8 @@ def group_steps(steps: List[Tuple[int, int, Any]], signal: List[float], gap: int
             grouped_step.append(steps[i])
         elif not precedent:
             precedent = steps[i]
+        elif steps[i][0] - precedent[1] < gap and abs(steps[i][2] - precedent[2]) < dist and i == len(steps) - 1:
+            grouped_step.append((precedent[0], steps[i][1], np.mean(signal[precedent[0]:steps[i][1]])))
         elif steps[i][0] - precedent[1] < gap and abs(steps[i][2] - precedent[2]) < dist:
             precedent = (precedent[0], steps[i][1], np.mean(signal[precedent[0]:steps[i][1]]))
         elif i == len(steps) - 1:
