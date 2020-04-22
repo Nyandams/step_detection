@@ -38,13 +38,12 @@ class EscalatorRush(BaseEstimator):
         :return: list of "stair" steps found [(start, stop, value)...]
         """
         good_inds = [self.inds[i] for i in range(len(self.inds)) if self.score[i] <= self.max_dist]
-
         potential_steps = []
         for index in good_inds:
             start: int = index
             end: int = index + self.min_step_size
 
-            if not potential_steps or (potential_steps and start > potential_steps[-1][1]):
+            if not potential_steps or (potential_steps and start >= potential_steps[-1][1]):
                 while self.cost.error(start, end+1) <= self.max_dist and end < len(self.signal):
                     end += 1
 
