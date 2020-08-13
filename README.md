@@ -18,6 +18,14 @@ algo = esc.EscalatorRush(cost=cost, min_step_size=3, max_dist=2, jump=1).fit(sig
 stair_steps = algo.predict()
 #  [(0, 10, 0.0), (11, 18, 29.833333333333332), (19, 27, 70.28571428571429), (33, 45, 100.0909090909091)]
 ```
+
+If steps are really close to each other, you can regroup them to have better results:
+```python
+import step_detection as esc
+...
+stair_steps = esc.group_steps(steps=stair_steps, signal=signal, gap=2 , dist=1)
+```
+
 You can then plot easily the result with your favorite package.
 
 ![Example 1 of the result](https://raw.githubusercontent.com/Nyandams/step_detection/master/images/plat1.png)
