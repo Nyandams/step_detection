@@ -19,7 +19,7 @@ stair_steps = algo.predict()
 #  [(0, 10, 0.0), (11, 18, 29.833333333333332), (19, 27, 70.28571428571429), (33, 45, 100.0909090909091)]
 ```
 
-If steps are really close to each other, you can regroup them to have better results:
+If steps are really close to each others, you can regroup them to have better results:
 ```python
 import step_detection as esc
 ...
