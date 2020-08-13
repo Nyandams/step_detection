@@ -45,7 +45,7 @@ class BaseEstimator(metaclass=abc.ABCMeta):
         raise NotImplementedError
 
 
-def group_steps(steps: List[Tuple[int, int, Any]], signal: List[float], gap: int = 3, dist: int = 2):
+def group_steps(steps: List[Tuple[int, int, Any]], signal: List[float], gap: int = 3, dist: float = 2):
     """
     Regroup 2 steps together
     :param steps: steps that results from any algorithm

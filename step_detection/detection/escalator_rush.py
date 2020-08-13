@@ -7,7 +7,7 @@ class EscalatorRush(BaseEstimator):
     def __init__(self,
                  cost: BaseCost,
                  min_step_size: int = 3,
-                 max_dist: int = 2,
+                 max_dist: float = 2,
                  jump: int = 1,
                  cache_size: int = None) -> None:
         """
@@ -64,10 +64,10 @@ class EscalatorRush(BaseEstimator):
         return potential_steps
 
     def cached_cost_test(self, start, end):
-        if self.cache_size and end - start > self.cache_size:
+        if self.cache_size and start in self.cached_reference:
             return abs(self.signal[end] - self.cached_reference[start]) <= self.max_dist
         else:
             error = self.cost.error(start, end+1)
-            if self.cache_size and end - start == self.cache_size and error <= self.max_dist:
+            if self.cache_size and end - start >= self.cache_size and error <= self.max_dist:
                 self.cached_reference[start] = np.mean(self.signal[start])
             return error <= self.max_dist
