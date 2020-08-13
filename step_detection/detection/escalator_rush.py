@@ -8,14 +8,27 @@ class EscalatorRush(BaseEstimator):
                  cost: BaseCost,
                  min_step_size: int = 3,
                  max_dist: int = 2,
-                 jump: int = 1) -> None:
-
+                 jump: int = 1,
+                 cache_size: int = None) -> None:
+        """
+        This estimator can use any cost class from the library, but the use of 'DistanceMeanCost' is encouraged.
+        Several optimization parameters can be used (jump and cache_size)
+        :param cost: the cost function
+        :param min_step_size: the minimal size of a step
+        :param max_dist: distance at which we consider a point isn't in the current step
+        :param jump: ignore some indexes during the fitting of the data, the highest, the more indexes you'll jump over.
+        Improve the speed of execution but reduce the execution time.
+        :param cache_size: number of elements in the step at which moment we decide to use a cached value of the mean of
+        the step instead of the cost function. Improve a lot the performances.
+        """
         self.signal = []
         self.inds = []
         self.score = []
         self.min_step_size: int = min_step_size
         self.max_dist = max_dist
         self.jump = jump
+        self.cache_size = cache_size
+        self.cached_reference = {}
 
         if cost is not None and isinstance(cost, BaseCost):
             self.cost = cost
@@ -37,16 +50,24 @@ class EscalatorRush(BaseEstimator):
         """
         :return: list of "stair" steps found [(start, stop, value)...]
         """
-        good_inds = [self.inds[i] for i in range(len(self.inds)) if self.score[i] <= self.max_dist]
+        good_inds = [idx for i, idx in enumerate(self.inds) if self.score[i] <= self.max_dist]
         potential_steps = []
         for index in good_inds:
-            start: int = index
             end: int = index + self.min_step_size
 
-            if not potential_steps or (potential_steps and start >= potential_steps[-1][1]):
-                while self.cost.error(start, end+1) <= self.max_dist and end < len(self.signal):
+            if not potential_steps or (potential_steps and index >= potential_steps[-1][1]):
+                while end < len(self.signal) and self.cached_cost_test(index, end):
                     end += 1
 
-                potential_steps.append((start, end, np.mean(self.signal[start:end-1])))
+                potential_steps.append((index, end, np.mean(self.signal[index:end-1])))
 
         return potential_steps
+
+    def cached_cost_test(self, start, end):
+        if self.cache_size and end - start > self.cache_size:
+            return abs(self.signal[end] - self.cached_reference[start]) <= self.max_dist
+        else:
+            error = self.cost.error(start, end+1)
+            if self.cache_size and end - start == self.cache_size and error <= self.max_dist:
+                self.cached_reference[start] = np.mean(self.signal[start])
+            return error <= self.max_dist
