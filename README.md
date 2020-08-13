@@ -1,7 +1,9 @@
 [![Build Status](https://travis-ci.com/Nyandams/step_detection.svg?branch=master)](https://travis-ci.com/Nyandams/step_detection)
 # Escalator
+Escalator is a small "change point detection" Python library allowing to detect stagnation in the values of a signal, sort of **horizontal steps**.
+Unlike all the change point algorithms I found, this one doesn't try to to find the moment where the change happens, but search for when the stagnation periods start and end.
 
-A small python package to detect stagnation in the values of a signal, sort of **horizontal steps**.
+Inspired by the [ruptures](https://github.com/deepcharles/ruptures) library.
 
 ## Installation
 ```
